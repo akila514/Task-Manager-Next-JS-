@@ -1,0 +1,18 @@
+datasource db {
+    provider = "mongodb"
+    url = env("MONGODB_URL")
+    relationMode = "prisma"
+}
+
+generator client {
+    provider = "prisma-client-js"
+    previewFeatures = ["fullTextSearch","fullTextIndex"]
+}
+
+model Task {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  createdAt   DateTime @default(now())
+
+  @@index([title])
+}
