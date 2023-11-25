@@ -10,7 +10,7 @@ const CreateTaskPage = () => {
     event.preventDefault();
     console.log(enteredTask);
 
-    await axios.post("api/tasks", { task: enteredTask });
+    await axios.post("api/tasks", { title: enteredTask });
   };
   return (
     <div className="text-sm w-full flex items-center justify-center h-[400px]">
