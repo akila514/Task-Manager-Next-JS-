@@ -18,7 +18,7 @@ const Navbar = async () => {
           <Link href={`/api/auth/signout`}>Signout</Link>
         ) : (
           <>
-            <Link href={`/api/auth/signin`}>Sign In</Link>
+            <Link href={`/login`}>Sign In</Link>
             <Link href={`/signup`}>Sign Up</Link>
           </>
         )}

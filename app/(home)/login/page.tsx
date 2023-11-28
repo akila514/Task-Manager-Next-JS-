@@ -1,10 +1,11 @@
 "use client";
 
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
-const SignUpPage = () => {
+const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,16 +13,17 @@ const SignUpPage = () => {
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const user = await axios.post("/api/register", {
-      name: username,
-      password,
-    });
-    if (user) {
-      router.push("/");
-    } else {
-      setUsername("");
-      setPassword("");
-    }
+
+    signIn("credentials", { username, password, redirect: false }).then(
+      (callback) => {
+        if (callback?.error) {
+          console.log(callback.error);
+        } else {
+          router.refresh();
+          router.push("/");
+        }
+      }
+    );
   };
 
   return (
@@ -51,4 +53,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default LoginPage;

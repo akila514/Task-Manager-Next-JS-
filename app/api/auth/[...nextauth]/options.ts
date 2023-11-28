@@ -26,7 +26,6 @@ export const options: NextAuthOptions = {
           type: "text",
         },
         password: { label: "Password", type: "password" },
-        email: { label: "Email", type: "email" },
       },
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
@@ -34,7 +33,7 @@ export const options: NextAuthOptions = {
         }
         const user = await db.user.findUnique({
           where: {
-            email: credentials!.email,
+            name: credentials!.username,
           },
         });
 
@@ -43,11 +42,13 @@ export const options: NextAuthOptions = {
         }
 
         const isValid = await bcrypt.compare(
-          user.password,
-          credentials.password
+          credentials.password,
+          user.password
         );
 
         if (!isValid) {
+          console.log(user.password);
+          console.log(credentials.password);
           throw new Error("Incorrect password");
         }
 
@@ -62,5 +63,3 @@ export const options: NextAuthOptions = {
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
 };
-
-
