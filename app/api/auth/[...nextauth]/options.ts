@@ -3,11 +3,11 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { db } from "@/lib/db";
+import prisma from "@/lib/db";
 import bcrypt from "bcrypt";
 
 export const options: NextAuthOptions = {
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -20,34 +20,29 @@ export const options: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-        },
         password: { label: "Password", type: "password" },
+        email: { label: "Email", type: "email" },
       },
       async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           throw new Error("No credentials");
         }
-        const user = await db.user.findUnique({
+        const user = await prisma.user.findUnique({
           where: {
-            name: credentials!.username,
+            email: credentials!.email,
           },
         });
 
-        if (!user || !user.password) {
+        if (!user || !user.hashedPassword) {
           throw new Error("No user");
         }
 
         const isValid = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.hashedPassword
         );
 
         if (!isValid) {
-          console.log(user.password);
-          console.log(credentials.password);
           throw new Error("Incorrect password");
         }
 

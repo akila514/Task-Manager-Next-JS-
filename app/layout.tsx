@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/context/AuthProvider";
-import { getCurrentUser } from "./actions/get-current-user";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -15,15 +13,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const currentUser = await getCurrentUser();
-
   return (
     <html lang="en">
-      <AuthProvider>
-        <body suppressHydrationWarning={true} className={inter.className}>
-          {children}
-        </body>
-      </AuthProvider>
+      <body suppressHydrationWarning={true} className={inter.className}>
+        {children}
+      </body>
     </html>
   );
 }

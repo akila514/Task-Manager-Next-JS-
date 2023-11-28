@@ -3,5 +3,5 @@ import { getServerSession } from "next-auth";
 
 export async function getCurrentUser() {
   const session = await getServerSession(options);
-  return session?.user;
+  return session ? session.user : null;
 }

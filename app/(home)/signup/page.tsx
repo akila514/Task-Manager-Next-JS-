@@ -1,12 +1,14 @@
 "use client";
 
 import axios from "axios";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const router = useRouter();
 
@@ -15,9 +17,10 @@ const SignUpPage = () => {
     const user = await axios.post("/api/register", {
       name: username,
       password,
+      email,
     });
     if (user) {
-      router.push("/");
+      router.push("/login");
     } else {
       setUsername("");
       setPassword("");
@@ -35,6 +38,15 @@ const SignUpPage = () => {
           type="text"
           name="name"
           id="name"
+        />{" "}
+        <label htmlFor="email">Email</label>
+        <input
+          className="text-white bg-transparent border rounded-md p-2"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          name="email"
+          id="email"
         />
         <label htmlFor="password">Password</label>
         <input
@@ -46,6 +58,9 @@ const SignUpPage = () => {
           id="password"
         />
         <button type="submit">Sign Up</button>
+        <button type="button" onClick={() => signIn("github")}>
+          Sign Up with GitHub
+        </button>
       </form>
     </div>
   );

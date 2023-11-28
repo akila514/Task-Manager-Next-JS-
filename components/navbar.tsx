@@ -1,36 +1,60 @@
-import Link from "next/link";
-import { options } from "@/app/api/auth/[...nextauth]/options";
-import { getServerSession } from "next-auth";
-import Image from "next/image";
+"use client";
 
-const Navbar = async () => {
-  const session = await getServerSession(options);
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { getCurrentUser } from "@/app/actions/get-current-user";
+
+interface NavbarProps {
+  currentUser: {
+    name: string;
+    image: string | null;
+  } | null;
+}
+
+const Navbar = ({ currentUser }: NavbarProps) => {
+  console.log(currentUser);
+  const router = useRouter();
+  const onSignOut = () => {
+    signOut();
+    router.refresh();
+    router.push("/login");
+  };
 
   return (
     <nav className="flex flex-row space-x-5 py-2 justify-between bg-[#131313] text-[#e9e9e9] text-sm">
-      <div className="">
-        <h1>Logo</h1>
+      <div className="flex">
+        <h1 className="flex my-auto">Logo</h1>
       </div>
-      <div className="space-x-5">
-        <Link href={`/`}>Home</Link>
-        <Link href={`/create`}>Create</Link>
-        {session ? (
-          <Link href={`/api/auth/signout`}>Signout</Link>
+      <div className="space-x-5 flex flex-row">
+        <Link href={`/`} className="flex my-auto">
+          Home
+        </Link>
+        <Link href={`/create`} className="flex my-auto">
+          Create
+        </Link>
+        {currentUser ? (
+          <button onClick={onSignOut}>Signout</button>
         ) : (
           <>
-            <Link href={`/login`}>Sign In</Link>
-            <Link href={`/signup`}>Sign Up</Link>
+            <Link href={`/login`} className="flex my-auto">
+              Sign In
+            </Link>
+            <Link href={`/signup`} className="flex my-auto">
+              Sign Up
+            </Link>
           </>
         )}
       </div>
       <div className="flex flex-row space-x-5">
-        {session?.user?.name && <h1>{session.user.name}</h1>}
-        {session?.user?.image && (
+        {currentUser && <h1 className="flex my-auto">{currentUser.name}</h1>}
+        {currentUser?.image && (
           <Image
-            src={session.user.image}
+            src={currentUser.image}
             alt={"Profile Pic"}
-            width={10}
-            height={10}
+            width={40}
+            height={40}
             className="rounded-full"
           />
         )}

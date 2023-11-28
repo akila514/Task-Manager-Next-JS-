@@ -6,7 +6,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const router = useRouter();
@@ -14,29 +14,33 @@ const LoginPage = () => {
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    signIn("credentials", { username, password, redirect: false }).then(
+    signIn("credentials", { email, password, redirect: false }).then(
       (callback) => {
+        if (callback?.ok) {
+          router.refresh();
+        }
+
         if (callback?.error) {
           console.log(callback.error);
-        } else {
-          router.refresh();
-          router.push("/");
         }
       }
     );
+
+    router.push("/");
+    router.refresh();
   };
 
   return (
     <div className="flex mx-auto">
       <form onSubmit={submitHandler} className="flex flex-col space-y-4">
-        <label htmlFor="name">Username</label>
+        <label htmlFor="email">Email</label>
         <input
           className="text-white bg-transparent border rounded-md p-2"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           type="text"
-          name="name"
-          id="name"
+          name="email"
+          id="email"
         />
         <label htmlFor="password">Password</label>
         <input
@@ -47,7 +51,7 @@ const LoginPage = () => {
           name="password"
           id="password"
         />
-        <button type="submit">Sign Up</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
