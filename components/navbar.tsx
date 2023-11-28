@@ -17,7 +17,10 @@ const Navbar = async () => {
         {session ? (
           <Link href={`/api/auth/signout`}>Signout</Link>
         ) : (
-          <Link href={`/api/auth/signin`}>Signin</Link>
+          <>
+            <Link href={`/api/auth/signin`}>Sign In</Link>
+            <Link href={`/signup`}>Sign Up</Link>
+          </>
         )}
       </div>
       <div className="flex flex-row space-x-5">
