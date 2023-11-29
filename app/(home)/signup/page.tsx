@@ -59,7 +59,10 @@ const SignUpPage = () => {
         />
         <button type="submit">Sign Up</button>
         <button type="button" onClick={() => signIn("github")}>
-          Sign Up with GitHub
+          Continue with GitHub
+        </button>
+        <button type="button" onClick={() => signIn("google")}>
+          Continue with Google
         </button>
       </form>
     </div>

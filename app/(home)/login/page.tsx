@@ -52,6 +52,12 @@ const LoginPage = () => {
           id="password"
         />
         <button type="submit">Login</button>
+        <button type="button" onClick={() => signIn("github")}>
+          Continue with GitHub
+        </button>
+        <button type="button" onClick={() => signIn("google")}>
+          Continue with Google
+        </button>
       </form>
     </div>
   );
