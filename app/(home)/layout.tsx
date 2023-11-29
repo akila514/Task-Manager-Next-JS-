@@ -3,7 +3,7 @@ import { getCurrentUser } from "../actions/get-current-user";
 
 const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
   const currentUser = await getCurrentUser();
-
+  
   return (
     <div className="max-w-7xl mx-auto pt-2 px-5">
       <Navbar

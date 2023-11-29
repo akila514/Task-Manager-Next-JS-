@@ -1,9 +1,11 @@
 "use client";
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const CreateTaskPage = () => {
+  const router = useRouter();
   const [enteredTask, setEnteredTask] = useState("");
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -11,6 +13,9 @@ const CreateTaskPage = () => {
     console.log(enteredTask);
 
     await axios.post("api/tasks", { title: enteredTask });
+
+    router.push("/");
+    router.refresh();
   };
   return (
     <div className="text-sm w-full flex items-center justify-center h-[400px]">
